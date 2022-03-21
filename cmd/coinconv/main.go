@@ -10,6 +10,12 @@ import (
 
 var help = "usage: coinconv <sum> <from> <to>\nwhere sum is number"
 
+type Converter interface {
+	PriceConversion(amount float64, from string, to string) (float64, error)
+}
+
+var srv Converter
+
 func main() {
 	errCloseFunc := func(err error) {
 		fmt.Println(err)
@@ -22,7 +28,7 @@ func main() {
 		errCloseFunc(err)
 	}
 
-	srv := converter.NewService()
+	srv = converter.NewService()
 	res, err := srv.PriceConversion(args.Sum, args.FromCurrency, args.ToCurrency)
 	if err != nil {
 		errCloseFunc(err)
